@@ -5,25 +5,30 @@ using namespace geode::prelude;
 
 class $modify(PlayerObject) {
     void updatePlayerFrame(int frame) {
-        // Llamamos al original
         PlayerObject::updatePlayerFrame(frame);
 
-        // Si es el Swing, tomamos el control visual
         if (this->m_isSwing) {
-            // En lugar de setFlipY en el sprite, escalamos el Layer principal
-            // Esto invierte TODO el conjunto (icono, ojos, glow) a la vez
-            if (auto layer = this->m_mainLayer) {
-                if (this->m_isUpsideDown) {
-                    layer->setScaleY(-1.0f);
-                } else {
-                    layer->setScaleY(1.0f);
-                }
+            bool upsideDown = this->m_isUpsideDown;
+            
+            // 1. Invertimos el sprite base del icono
+            if (this->m_iconSprite) {
+                this->m_iconSprite->setFlipY(upsideDown);
             }
             
-            // Importante: Si el icono se duplica, es porque m_iconSprite 
-            // está intentando dibujarse por separado. Lo reseteamos aquí:
-            if (this->m_iconSprite) {
-                this->m_iconSprite->setFlipY(false); 
+            // 2. Invertimos el brillo (Glow) para que no se duplique/desfase
+            if (this->m_iconGlow) {
+                this->m_iconGlow->setFlipY(upsideDown);
+            }
+
+            // 3. Invertimos el contenedor del vehículo (el Swing en sí)
+            if (this->m_vehicleSprite) {
+                this->m_vehicleSprite->setFlipY(upsideDown);
+            }
+
+            // Si notas que el icono se "hunde", ajustamos el offset visual
+            if (upsideDown) {
+                // Ajuste fino por si el punto de anclaje lo mueve
+                // this->m_iconSprite->setPositionY(-1.0f); 
             }
         }
     }
