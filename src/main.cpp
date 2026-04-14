@@ -7,16 +7,14 @@ class $modify(PlayerObject) {
     void updatePlayerFrame(int frame) {
         PlayerObject::updatePlayerFrame(frame);
 
-        // Solo actuamos si el jugador es el Swing
+        // m_isSwing detecta si estamos en el modo Swing
         if (this->m_isSwing) {
-            // m_iconSpriteHolder es el nodo que contiene el cuerpo, ojos y detalles
-            if (auto holder = this->m_iconSpriteHolder) {
+            // m_mainLayer es el nodo principal que contiene los sprites del icono
+            if (auto layer = this->m_mainLayer) {
                 if (this->m_isUpsideDown) {
-                    // Invertimos el contenedor visual
-                    holder->setScaleY(-1.0f);
+                    layer->setScaleY(-1.0f);
                 } else {
-                    // Lo devolvemos a su estado normal
-                    holder->setScaleY(1.0f);
+                    layer->setScaleY(1.0f);
                 }
             }
         }
