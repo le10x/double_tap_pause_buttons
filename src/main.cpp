@@ -4,8 +4,8 @@
 using namespace geode::prelude;
 
 class $modify(PlayerObject) {
-    void updatePlayerFrame() {
-        PlayerObject::updatePlayerFrame();
+    void updatePlayerFrame(int frame) {
+        PlayerObject::updatePlayerFrame(frame);
 
         if (this->m_isSwing) {
             if (this->m_isUpsideDown) {
