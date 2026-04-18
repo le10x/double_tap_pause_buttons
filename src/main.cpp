@@ -13,7 +13,6 @@ class $modify(MyPauseLayer, PauseLayer) {
     };
 
     void handleSafeClick(CCObject* sender, std::string_view settingKey, std::function<void(CCObject*)> originalFunc) {
-        // Si la configuración está apagada, ejecutar original y salir
         if (!Mod::get()->getSettingValue<bool>(std::string(settingKey))) {
             originalFunc(sender);
             return;
@@ -22,11 +21,8 @@ class $modify(MyPauseLayer, PauseLayer) {
         auto ahora = std::chrono::system_clock::now();
         auto tiempoTranscurrido = std::chrono::duration_cast<std::chrono::milliseconds>(ahora - m_fields->m_lastClickTime).count();
 
-        // Corrección del bug de botones mezclados:
-        // Reiniciamos si el botón físico es diferente O si pasó más de 500ms
         if (m_fields->m_lastButton != sender || tiempoTranscurrido > 500) {
             m_fields->m_clickCount = 0;
-            // Borrar cualquier mensaje previo para no acumular etiquetas
             this->removeChildByTag(69420);
         }
 
@@ -35,15 +31,16 @@ class $modify(MyPauseLayer, PauseLayer) {
         m_fields->m_lastClickTime = ahora;
 
         if (m_fields->m_clickCount >= 2) {
-            // Resetear contador antes de ejecutar para evitar bucles en botones de toggle
-            m_fields->m_clickCount = 0;
+            m_fields->m_clickCount = 0; // Resetear antes de ejecutar
             originalFunc(sender);
         } else {
             auto label = CCLabelBMFont::create("Click again to confirm", "bigFont.fnt");
-            label->setPosition(CCDirector::get()->getWinSize() / 2);
+            auto winSize = CCDirector::get()->getWinSize();
+            label->setPosition({winSize.width / 2, winSize.height / 2 - 50}); // Un poco abajo del centro
             label->setScale(0.5f);
             label->setTag(69420);
             
+            this->removeChildByTag(69420);
             this->addChild(label);
             
             label->runAction(CCSequence::create(
@@ -56,11 +53,9 @@ class $modify(MyPauseLayer, PauseLayer) {
         }
     }
 
-    // --- Hooks Actualizados ---
-    
-    // Cambiado de onEdit a onGoToEditor para compatibilidad 2.2081
-    void onGoToEditor(CCObject* s) { 
-        handleSafeClick(s, "lock-editor", [this](CCObject* o) { PauseLayer::onGoToEditor(o); }); 
+    // Usamos onEdit que es el binding estándar
+    void onEdit(CCObject* s) { 
+        handleSafeClick(s, "lock-editor", [this](CCObject* o) { PauseLayer::onEdit(o); }); 
     }
 
     void onResume(CCObject* s) { 
