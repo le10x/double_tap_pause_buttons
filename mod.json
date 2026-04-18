@@ -13,12 +13,12 @@
     "description": "A mod that requires quick clicking to activate the pause menu buttons!",
     "repository": "https://github.com",
     "settings": {
-        "lock-play": { "name": "Protect Play Button", "type": "bool", "default": false },
-        "lock-editor": { "name": "Protect Editor Button", "type": "bool", "default": false },
-        "lock-practice": { "name": "Protect Practice Button", "type": "bool", "default": true },
+        "show-message": { "name": "Show Confirmation Message", "type": "bool", "default": true },
+        "custom-text": { "name": "Custom Message Text", "type": "string", "default": "Click again to confirm" },
         "lock-exit": { "name": "Protect Exit Button", "type": "bool", "default": true },
         "lock-reset": { "name": "Protect Reset Button", "type": "bool", "default": true },
-        "lock-exit-practice": { "name": "Protect Exit Practice", "type": "bool", "default": true },
+        "lock-practice": { "name": "Protect Practice Button", "type": "bool", "default": false },
+        "lock-exit-practice": { "name": "Protect Exit Practice", "type": "bool", "default": false },
         "lock-reset-plat": { "name": "Protect Reset All (Plat)", "type": "bool", "default": true }
     }
 }
